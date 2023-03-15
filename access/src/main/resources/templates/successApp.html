@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中间层</title>
+</head>
+<body>
+<script th:inline="javascript">
+    window.onload = function () {
+        var success = [[${success}]];
+        var message = [[${message}]];
+        var userStr = [[${user}]];
+        console.log("success:" + success + ",message:" + message + ",user:" + userStr);
+        if ("true" === success) {
+            const user = JSON.parse(userStr);
+            localStorage.setItem('auth/userInfo', JSON.stringify(user));
+            setTimeout(function () {
+                console.log("location:" + location.origin + user.redirectUrl);
+                window.location.href = user.redirectUrl;
+            }, 0);
+        } else {
+            alert(message);
+        }
+    };
+</script>
+</body>
+</html>

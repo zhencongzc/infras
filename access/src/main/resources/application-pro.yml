@@ -1,0 +1,154 @@
+#内网生产用：需改名为application.yml.tmpl，放在\loginaccess_upgrade\xloginaccess\config下使用
+server:
+  port: 8087
+  servlet:
+    context-path: /loginaccess
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+spring:
+  application:
+    name: loginaccess
+  rabbitmq:
+    host: {{getv "/rabbitmq/host"}}
+    port: {{getv "/rabbitmq/port"}}
+    username: {{getv "/rabbitmq/user"}}
+    password: {{getv "/rabbitmq/passwd"}}
+  thymeleaf:
+    prefix:
+      classpath: /templates
+    cache: false
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: {{getv "/nginx/host"}}:8848
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://{{getv "/mariadb/host"}}:{{getv "/mariadb/port"}}/infras?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: {{getv "/mariadb/user"}}
+    password: {{getv "/mariadb/passwd"}}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      enabled: true
+
+  devtools:
+    restart:
+      enabled: true
+#      additional-paths: src/main/java
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.cmbc.infras.system.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#登陆验证接口地址
+authorize:
+  clientId: G26
+  secret: Ghepf1UC6GNkvV81
+  authorizeUrl: http://spsso.cmbc.com.cn:8008/SOAM/oauth/authorize
+  redirectUrl: http://40.2.160.91:18080/loginaccess/toLoginAccess
+  tokenUrl: http://40.45.13.36:14100/SOAM/oauth/token
+  userInfoUrl: http://40.45.13.36:14100/SOAM/user/getuserinfo
+  logOutUrl: http://iamtest.dev.cmbc.cn:8028/SOAM/oauth/logout
+  whiteString: .js,.png,.ttf,.woff,.css,.json,.webm,/logout,/authorizeCallback,/toLoginAccess,/mobileAuthCallback,/loginProcess,/socket,/alarm/authCode,
+            /test,/toAlarmPage,/toLastCount,/lastCount,/app/callback,/loginProcess,/app/callback,/getKeToken,/toLoginAdmin
+  redirectAlarmPage: /infras_web/alarm/event.html
+
+mobile:
+  auth:
+    clientId: ba92f04134ab2cb6051bcdf1afec75a7
+    secret: ba92f04134ab2cb6051bcdf1afec75a7
+    redirectUrl: http://40.2.160.91:18080/loginaccess/app/callback
+    loginUrl: http://40.55.95.3:80/moa/oauth2/test/login
+    authUrl: http://40.55.95.3:80/moa/oauth2/authorize
+    tokenUrl: http://40.55.95.3:80/moa/oauth2/access_token
+    userInfoUrl: http://40.55.95.3:80/moa/oauth2/user
+    loginKeUrl: http://127.0.0.1/loginaccess/loginProcess
+    mobileUrls: .js,.png,.ttf,.woff,.css,.json,.webm,phone.html,/logout,/socket,/alarm/authCode,/userBankId
+              ,/monitor/upss,/mobile/alarms,/monitor/childBankData,/monitor/airs,/monitor/humids,/mobile/historyAlarms
+              ,/mobile/confirm,/mobile/accept
+  #代办消息服务认证用
+  authorize:
+    url: http://oagatewaydev.dev.cmbc.cn/cmbc-oauth-regster/cmbc-oauth-regster/oauth/token
+    client_id: QHDLHJJK_5ee404ac-8787-489d-9098-22dee2671901
+    client_secret: QHDLHJJK_39011ec5-87e6-4339-8198-6695ddf3afea1664178695
+    username: QHDLHJJK
+    password: cmbc@95568
+    grant_type: password
+  oa:
+    server: http://197.0.196.189:8092
+
+event-mq:
+  queue: eventTopicQueue
+  exchange: storage_exchange
+  routing: storage.eventtopic.#
+
+redis.addrs: {{getv "/redis/addrs"}}
+redis.passwd: {{getv "/redis/passwd"}}
+redis.cluster: {{getv "/redis/cluster"}}
+
+#feignClient-请求数据地址端口
+ke-rpc:
+  server: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}
+ke:
+  encrtyKey: wanguoshuju12345
+simple:
+  admin:
+    url: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}/api/admin
+    index:
+      url: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+#测试账号
+login.test: false
+#UserBankRpc
+bankRpc:
+  name: xinfras
+  api: /xinfras/userBankId
+
+#流程表单根据银行名查银行ID-表单号
+flowForm:
+  evaluate:
+    formId: 202112091604466996
+  partol:
+    formId: OnSiteInspectionTask
+  maintain:
+    formId: MaintenanceOperation
+  deduce:
+    formId: EmergencyOperation
+  score:
+    formId: 202112061600527094
+
+#移动OA认证后跳转的首页，需要行方配置nginx转发
+infras.oa_home: http://msmoatest.cmbc.com.cn:8899/flow_app/index.html?isLogin=true
+infras.home.portal: /portal
+infras.common.configs: "{'no-verify':'true','switch':'true', 'checkLoginKe':'1', 'loginKeUrl':'http://40.2.160.86:18080/api/v3/xsso/token/check'}"
+
+#自定义注解-结果LGO是否输出
+#有的查询结果太长
+self.annotation.log.open: false
+
+#生产运营部生产调度中心-三方接口调用
+interface:
+  switchRefresh: close
+  lastCount:
+    clientId: itptl
+    code: Q6F1hbGPcLOSSeUlugxpMNMJmygcRZSSc0fvm7Cb8i26GOFtblZ6n6qS5D5HFPlMlSVWCZKDyBvELJLN0IK5RQNLxKEBxQEJzOENzN
+
+

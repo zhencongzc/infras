@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmbc.infras.system.mapper.LabelMapper">
+
+    <select id="getLabels" resultType="com.cmbc.infras.dto.Label" parameterType="string">
+        select id, account, label_name labelName, event_level eventLevel, process_state processState, recover_state recoverState, location, checked
+        from tl_label where account = #{account}
+    </select>
+
+    <select id="getLabelsChecked" resultType="com.cmbc.infras.dto.Label" parameterType="string">
+        select id, account, label_name labelName, event_level eventLevel, process_state processState, recover_state recoverState, location, checked
+        from tl_label where account = #{account} and checked = 1 limit 1
+    </select>
+
+    <select id="getLabel" parameterType="int" resultType="com.cmbc.infras.dto.Label">
+        select id, account, label_name labelName, event_level eventLevel, process_state processState, recover_state recoverState, location, checked
+        from tl_label where id = #{id}
+    </select>
+
+    <insert id="addLabel" useGeneratedKeys="true" keyProperty="id" parameterType="com.cmbc.infras.dto.Label">
+        insert into tl_label (account, label_name, event_level, process_state, recover_state, location, checked)
+        values(#{account}, #{labelName}, #{eventLevel}, #{processState}, #{recoverState}, #{location}, 0)
+    </insert>
+
+    <update id="editLabel" parameterType="com.cmbc.infras.dto.Label">
+        update tl_label set
+            label_name = #{labelName},
+            event_level = #{eventLevel},
+            process_state = #{processState},
+            recover_state = #{recoverState},
+            location = #{location}
+        where id = #{id}
+    </update>
+
+    <!--标签先中-先都设成未选中-再把id设成选中-->
+    <update id="unCheck" parameterType="string">
+        update tl_label set checked = 0 where account = #{account}
+    </update>
+    <update id="setCheck" parameterType="int">
+        update tl_label set checked = 1 where id = #{id}
+    </update>
+
+    <delete id="delLabel" parameterType="int">
+        delete from tl_label where id = #{id}
+    </delete>
+
+
+
+</mapper>

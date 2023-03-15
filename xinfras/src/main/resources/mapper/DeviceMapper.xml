@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmbc.infras.system.mapper.DeviceMapper">
+
+    <select id="getBanksBeatDeviceIds" resultType="java.lang.String" parameterType="list">
+        select device_id deviceId
+        from tl_bank_device
+        where device_type = 10 and bank_id in
+        <foreach collection="bankIds" index="i" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        group by bank_id
+    </select>
+
+    <select id="getBanksBeatDeviceId" resultType="com.cmbc.infras.dto.Device">
+        select id, bank_id bankId, device_id deviceId, device_name deviceName, device_type deviceType
+        from tl_bank_device
+        where device_type = 10 and bank_id = #{bankId} limit 1
+    </select>
+
+    <select id="getDevicesBanks" resultType="java.lang.String" parameterType="list">
+        select bank_id from tl_bank_device where device_id in
+        <foreach collection="deviceIds" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        GROUP BY bank_id
+    </select>
+
+</mapper>

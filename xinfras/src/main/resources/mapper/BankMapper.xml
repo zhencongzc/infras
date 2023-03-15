@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmbc.infras.system.mapper.BankMapper">
+
+    <select id="getBankById" resultType="com.cmbc.infras.dto.Bank">
+        select id, bank_id bankId, bank_name bankName, parent_id parentId, contact_id contactId,
+               contact, sort, level, lng, lat, area_id areaId, area_name areaName, remark
+        from tl_bank where bank_id = #{bankId}
+    </select>
+
+    <select id="getSubBanksById" resultType="com.cmbc.infras.dto.Bank" parameterType="string">
+        select id, bank_id bankId, bank_name bankName, parent_id parentId, contact_id contactId,
+               contact, sort, level, lng, lat, area_id areaId, area_name areaName, remark
+        from tl_bank where parent_id = #{parentId} order by sort
+    </select>
+
+    <select id="getSubBanks" parameterType="list" resultType="com.cmbc.infras.dto.Bank">
+        select id, bank_id bankId, bank_name bankName, parent_id parentId, contact_id contactId,
+        contact, sort, level, lng, lat, area_id areaId, area_name areaName, remark
+        from tl_bank
+        where parent_id in
+        <foreach collection="list" open="(" close=")" item="item" separator="," index="i">
+            #{item}
+        </foreach>
+        order by sort asc
+    </select>
+
+    <select id="getSubBankIds" parameterType="list" resultType="string">
+        select bank_id
+        from tl_bank
+        where parent_id in
+        <foreach collection="list" open="(" close=")" item="item" separator="," index="i">
+            #{item}
+        </foreach>
+        order by sort asc
+    </select>
+
+    <select id="getBanksByLevel" resultType="com.cmbc.infras.dto.Bank" parameterType="int">
+        select id, bank_id bankId, bank_name bankName, parent_id parentId, contact_id contactId,
+               contact, sort, level, lng, lat, area_id areaId, area_name areaName, remark
+        from tl_bank where level = #{level}
+    </select>
+
+    <select id="getBanksByLevelLink" resultType="com.cmbc.infras.dto.Bank" parameterType="int">
+        select id, bank_id bankId, bank_name bankName, parent_id parentId, contact_id contactId,
+               contact, sort, level, lng, lat, area_id areaId, area_name areaName, remark,link_id
+        from tl_bank where level = #{level}
+    </select>
+
+    <!--历史告警统计改造-银行查询-->
+    <!--根据银行ID查下级银行ID-->
+    <select id="selectSubsById" parameterType="string" resultType="com.cmbc.infras.dto.Bank">
+        select id, bank_id bankId, bank_name bankName, parent_id parentId, contact_id contactId,
+               contact, sort, level, lng, lat, area_id areaId, area_name areaName, remark
+        from tl_bank where parent_id = #{bankId}
+    </select>
+
+    <select id="getAllBankIds" resultType="java.lang.String">
+        select bank_id bankId from tl_bank where bank_id != '0'
+    </select>
+
+</mapper>

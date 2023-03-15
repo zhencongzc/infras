@@ -1,0 +1,64 @@
+#甄聪用本地配置
+server:
+  port: 8086
+  servlet:
+    context-path: /health
+
+spring:
+  application:
+    name: infras-health
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: 127.0.0.1:8848
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/health?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: root
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      enabled: true
+  devtools:
+    restart:
+      enabled: true
+
+mybatis-plus:
+  auto-mapping-behavior: partial
+  map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.cmbc.infras.system.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 是否进行登录拦截 true 拦截 false 不拦截
+login.inception: true
+
+redis.addrs: 127.0.0.1:6379
+redis.passwd:
+redis.cluster:
+
+#feignClient-请求数据地址端口
+ke-rpc:
+  server: http://119.23.240.98:8088
+pe-rpc:
+  server: http://119.23.240.98:8088
+ke:
+  encrtyKey: wanguoshuju12345
+simple:
+  admin:
+    url: http://119.23.240.98:8088/api/admin
+
+#健康评分uri
+health:
+  document: F://opt/data/upload/health/document
+  picture: F://opt/data/upload/health/picture
+  pdf: F://opt/data/upload/health/pdf
+  report: F://opt/data/upload/health/report

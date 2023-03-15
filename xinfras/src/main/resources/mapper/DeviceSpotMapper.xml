@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmbc.infras.system.mapper.DeviceSpotMapper">
+
+    <select id="getBanksDevices" resultType="com.cmbc.infras.dto.Device" parameterType="map">
+        select t1.bank_id bankId, t1.device_id deviceId, t1.ke_name keName, t1.device_name deviceName, t1.group_name groupName,
+               t1.true_device_id trueDeviceId, t2.bank_name bankName, t2.level bankLevel
+        from tl_bank_device t1 INNER JOIN tl_bank t2 ON t1.bank_id=t2.bank_id where t1.bank_id in
+        <foreach collection="bankIds" index="i" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        <if test="deviceType != null">and t1.device_type = #{deviceType}</if>
+    </select>
+
+    <select id="getDevices" resultType="com.cmbc.infras.dto.Device" parameterType="map">
+        select bank_id bankId, device_id deviceId, device_name deviceName, device_type deviceType
+        from tl_bank_device where bank_id = #{bankId}
+        <if test="deviceType != null">and device_type = #{deviceType}</if>
+    </select>
+
+    <select id="getDevByIdType" resultType="com.cmbc.infras.dto.Device" parameterType="map">
+        select bank_id bankId, device_id deviceId, device_name deviceName, device_type deviceType
+        from tl_bank_device
+        where bank_id = #{bankId}
+          and device_type = #{deviceType}
+    </select>
+
+    <!--DeviceTypeEnum.PUE-->
+    <select id="getBankPue" resultType="com.cmbc.infras.dto.Device" parameterType="string">
+        select bank_id bankId, device_id deviceId, device_name deviceName, device_type deviceType
+        from tl_bank_device
+        where bank_id = #{bankId}
+          and device_type = 40
+    </select>
+
+    <select id="getBanksPues" resultType="com.cmbc.infras.dto.Device" parameterType="list">
+        select bank_id bankId, device_id deviceId, device_name deviceName, device_type deviceType
+        from tl_bank_device where bank_id in
+        <foreach collection="bankIds" index="i" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        and device_type = 40
+    </select>
+
+    <select id="getDevicesSpots" resultType="com.cmbc.infras.dto.monitor.Spot" parameterType="list">
+        select device_id deviceId, spot_id spotId, spot_name spotName, spot_type spotType
+        from tl_device_spot
+        where device_id in
+        <foreach collection="deviceIds" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getDevSpots" resultType="com.cmbc.infras.dto.monitor.Spot" parameterType="com.cmbc.infras.dto.Device">
+        select device_id deviceId, spot_id spotId, spot_name spotName, spot_type spotType
+        from tl_device_spot
+        where device_id = #{deviceId}
+    </select>
+
+    <!--SpotTypeEnum.PUE_REAL_TIME-->
+    <select id="getDevicesPueSpots" resultType="com.cmbc.infras.dto.monitor.Spot">
+        select device_id deviceId, spot_id spotId, spot_name spotName, spot_type spotType
+        from tl_device_spot
+        where device_id in
+        <foreach collection="deviceIds" open="(" close=")" separator="," item="item" index="i">
+            #{item}
+        </foreach>
+        and spot_type = 41
+    </select>
+
+</mapper>

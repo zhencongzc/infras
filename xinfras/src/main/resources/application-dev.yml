@@ -1,0 +1,157 @@
+#开发环境配置
+server:
+  ip: 119.23.240.98
+  port: 8085
+  servlet:
+    context-path: /infras
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+spring:
+  application:
+    name: xinfras
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: ${server.ip}:8848
+    sentinel:
+      transport:
+        dashboard: ${server.ip}:8401 #界面地址
+        port: 8719 #客户端占用端口，从8719往上加
+  rabbitmq:
+    host: ${server.ip}
+    port: 5672
+    username: gj
+    password: xbrother
+  thymeleaf:
+    prefix:
+      classpath: /templates
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${server.ip}:3306/infras?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: gj
+    password: xbrother
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      enabled: true
+  devtools:
+    restart:
+      enabled: true
+
+#暴露信息，给sentinel的dashboard做监控
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.cmbc.infras.system.domain
+  configuration:
+    log-impl:
+
+#登陆验证接口地址
+authorize:
+  clientId: G26
+  secret: G96ng1wH3KXTnypY
+  authorizeUrl: http://127.0.0.1:8080/oauth/authorize
+  redirectUrl: http://127.0.0.1:8087/loginaccess/toLoginAccess
+  tokenUrl: http://127.0.0.1:8080/oauth/token
+  userInfoUrl: http://127.0.0.1:8080/oauth/userInfo
+  logoutUrl: http://127.0.0.1:8080/oauth/logout
+  messageUrl: http://127.0.0.1:8181/dcom/message
+  whiteString: ".js,.png,.ttf,.woff,.css,.json,.webm,/logout,/authorizeCallback,/lastCount,/toLoginAccess,/mobileAuthCallback,/logout,\
+  /socket,/alarm/authCode,/userBankId,/toAlarmPage,/toLastCount,/event.html,/app/callback,/loginProcess,/workBench,/head/siteStatis,\
+  /head/evaluates,/config/bankSpotListFromKeByResourceId,/config/bankSpotLatest,/mobile,/loginPortalKe,/formMessage/inform"
+
+#移动端用
+mobile:
+  #代办消息服务认证用
+  authorize:
+    url: http://oagatewaydev.dev.cmbc.cn/cmbc-oauth-regster/cmbc-oauth-regster/oauth/token
+    client_id: QHDLHJJK_5ee404ac-8787-489d-9098-22dee2671901
+    client_secret: QHDLHJJK_39011ec5-87e6-4339-8198-6695ddf3afea1664178695
+    username: QHDLHJJK
+    password: cmbc@95568
+    grant_type: password
+  oa:
+    server: http://197.0.196.189:8092
+
+event-mq:
+  queue: eventTopicQueue
+  exchange: storage_exchange
+  routing: storage.eventtopic.#
+
+redis.addrs: 127.0.0.1:6379
+redis.passwd:
+redis.cluster: false
+
+#redis.addrs: ${server.ip}:6379
+#redis.passwd: Xbrother*123
+#redis.cluster: false
+
+#feignClient-请求数据地址端口
+ke-rpc:
+  server: http://${server.ip}:8088
+ke:
+  encrtyKey: wanguoshuju12345
+
+simple:
+  admin:
+    url: http://${server.ip}:8088/api/admin
+    index:
+      url: http://${server.ip}:8088
+
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+
+#测试账号
+login.test: true
+
+#流程表单根据银行名查银行ID-表单号
+flowForm:
+  evaluate:
+    formId: 202112091604466996
+  partol:
+    formId: OnSiteInspectionTask
+  maintain:
+    formId: MaintenanceOperation
+  deduce:
+    formId: EmergencyOperation
+  score:
+    formId: 202112091604466996
+
+#移动OA认证后跳转的首页
+infras.oa_home: http://msmoatest.cmbc.com.cn:8899/infras/info/phone.html
+infras.home.portal: /portal
+#YmlConfig.getBoolValue(1,true返回true)
+infras.common.configs: "{'no-verify':'true','switch':'true', 'checkLoginKe':'0', 'loginKeUrl':'http://40.2.160.86:18080/api/v3/xsso/token/check'}"
+
+#自定义注解-结果LGO是否输出
+#有的查询结果太长
+self.annotation.log.open: false
+
+#生产运营部生产调度中心-三方接口调用
+interface:
+  switchRefresh: close
+  lastCount:
+    clientId: itptl
+    code: Q6F1hbGPcLOSSeUlugxpMNMJmygcRZSSc0fvm7Cb8i26GOFtblZ6n6qS5D5HFPlMlSVWCZKDyBvELJLN0IK5RQNLxKEBxQEJzOENzN
+
+#资产管理模块
+asset:
+  getData:
+    url: http://197.0.197.55:8081/itassets/mgmt/itassetsQueryMachineroomEquipList.json #获取全量数据的接口

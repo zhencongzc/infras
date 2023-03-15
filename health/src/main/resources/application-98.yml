@@ -1,0 +1,68 @@
+#外网98服务器用
+server:
+  port: 8086
+  servlet:
+    context-path: /health
+
+spring:
+  application:
+    name: infras-health
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: 127.0.0.1:8848
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://172.16.75.114:3306/health?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: gj
+    password: xbrother
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      enabled: true
+  devtools:
+    restart:
+      enabled: true
+
+mybatis-plus:
+  auto-mapping-behavior: partial
+  map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.cmbc.infras.system.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 是否进行登录拦截 true 拦截 false 不拦截
+login.inception: true
+
+redis.addrs: 172.16.75.114:6379
+redis.passwd: Xbrother*123
+redis.cluster: false
+
+#feignClient-请求数据地址端口
+ke-rpc:
+  server: http://127.0.0.1:80
+pe-rpc:
+  server: http://127.0.0.1:80
+ke:
+  encrtyKey: wanguoshuju12345
+simple:
+  admin:
+    url: http://127.0.0.1:80/api/admin
+    index:
+      url: http://127.0.0.1:80
+
+#健康评分uri
+health:
+  document: /opt/data/upload/health/document
+  picture: /opt/data/upload/health/picture
+  pdf: /opt/data/upload/health/pdf
+  report: /opt/data/upload/health/report
+
+

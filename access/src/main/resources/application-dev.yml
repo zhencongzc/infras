@@ -1,0 +1,147 @@
+#甄聪用本地配置
+server:
+  port: 8087
+  servlet:
+    context-path: /loginaccess
+  compression:
+    enabled: true
+    mime-types: application/javascript,text/css,application/json,application/xml,text/html,text/xml,text/plain
+
+spring:
+  application:
+    name: loginaccess
+  rabbitmq:
+    host: 119.23.240.98
+    port: 5672
+    username: gj
+    password: xbrother
+  thymeleaf:
+    prefix:
+      classpath: /templates
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/infras?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: root
+    password: root
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: 127.0.0.1:8848
+
+event-mq:
+  queue: eventTopicQueue
+  exchange: storage_exchange
+  routing: storage.eventtopic.#
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      enabled: true
+
+  devtools:
+    restart:
+      enabled: true
+
+#登陆验证接口地址
+authorize:
+  clientId: G26
+  secret: G96ng1wH3KXTnypY
+  authorizeUrl: http://197.4.210.17:8028/SOAM/oauth/authorize
+  redirectUrl: http://197.0.3.78/loginaccess/toLoginAccess
+  userInfoUrl: http://197.3.179.112:19000/SOAM/user/getuserinfo
+  whiteString: .js,.png,.ttf,.woff,.css,.json,.webm,/logout,/authorizeCallback,/toLoginAccess,/mobileAuthCallback
+      ,/logout,/test,/socket,/alarm/authCode,/loginProcess,/toAlarmPage,/toLastCount,/app/callback,/getKeToken,/toLoginAdmin
+  tokenUrl: http://197.3.179.112:19000/SOAM/oauth/token
+  redirectAlarmPage: /infras/alarm/event.html
+
+mobile:
+  auth:
+    clientId: fbed1d1b4b1449daa4bc49397cbe2350
+    secret: fbed1d1b4b1449daa4bc49397cbe2350
+    redirectUrl: http://197.0.3.78/loginaccess/toAppLoginAccess
+    loginUrl: http://197.3.196.107:8080/moatest/oauth2/test/login
+    authUrl: http://197.3.196.107:8080/moatest/oauth2/authorize
+    tokenUrl: http://197.3.196.107:8080/moatest/oauth2/access_token
+    userInfoUrl: http://197.3.196.107:8080/moatest/oauth2/user
+    mobileUrls: .js,.png,.ttf,.woff,.css,.json,.webm,phone.html,/logout,/socket,/alarm/authCode,/userBankId
+      ,/monitor/upss,/mobile/alarms,/monitor/childBankData,/monitor/airs,/monitor/humids,/mobile/historyAlarms
+      ,/mobile/confirm,/mobile/accept
+  #代办消息服务认证用
+  authorize:
+    url: http://oagatewaydev.dev.cmbc.cn/cmbc-oauth-regster/cmbc-oauth-regster/oauth/token
+    client_id: QHDLHJJK_5ee404ac-8787-489d-9098-22dee2671901
+    client_secret: QHDLHJJK_39011ec5-87e6-4339-8198-6695ddf3afea1664178695
+    username: QHDLHJJK
+    password: cmbc@95568
+    grant_type: password
+  oa:
+    server: http://197.0.196.189:8092
+
+
+redis.addrs: 127.0.0.1:6379
+redis.passwd:
+redis.cluster:
+
+#feignClient-请求数据地址端口
+ke-rpc:
+  server: http://119.23.240.98:8088
+ke:
+  encrtyKey: wanguoshuju12345
+
+simple:
+  admin:
+    url: http://119.23.240.98:8088/api/admin
+    index:
+      url: http://119.23.240.98:8088
+
+feign:
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+
+#测试账号
+login.test: true
+
+#UserBankRpc
+bankRpc:
+  name: xinfras
+  api: /infras/userBankId
+
+#流程表单根据银行名查银行ID-表单号
+flowForm:
+  evaluate:
+    formId: 202112091604466996
+  partol:
+    formId: OnSiteInspectionTask
+  maintain:
+    formId: MaintenanceOperation
+  deduce:
+    formId: EmergencyOperation
+  score:
+    formId: 202112061600527094
+
+#移动OA认证后跳转的首页，需要行方配置nginx转发
+infras.oa_home: http://msmoatest.cmbc.com.cn:8899/flow_app/index.html?isLogin=true
+infras.home.portal: /portal
+infras.common.configs: "{'no-verify':'true','switch':'true', 'checkLoginKe':'1', 'loginKeUrl':'http://40.2.160.86:18080/api/v3/xsso/token/check'}"
+
+#自定义注解-结果LGO是否输出
+#有的查询结果太长
+self.annotation.log.open: false
+
+#生产运营部生产调度中心-三方接口调用
+interface:
+  switchRefresh: close
+  lastCount:
+    clientId: itptl
+    code: Q6F1hbGPcLOSSeUlugxpMNMJmygcRZSSc0fvm7Cb8i26GOFtblZ6n6qS5D5HFPlMlSVWCZKDyBvELJLN0IK5RQNLxKEBxQEJzOENzN

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cmbc.infras.system.mapper.BankTimeMapper">
+
+    <select id="getBankTime" resultType="com.cmbc.infras.dto.ops.BankTime" parameterType="string">
+        select id, bank_id bankId, bank_name bankName, run_time runTime
+        from tl_bank_run_time
+        where bank_id = #{bankId} limit 1
+    </select>
+
+</mapper>

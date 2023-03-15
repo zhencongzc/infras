@@ -1,0 +1,68 @@
+#内网测试用：需改名为application.yml.tmpl，放在\health_upgrade\health\config下使用
+server:
+  port: 8086
+  servlet:
+    context-path: /health
+
+spring:
+  application:
+    name: infras-health
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: {{getv "/nginx/host"}}:8848
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://{{getv "/mariadb/host"}}:{{getv "/mariadb/port"}}/health?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: {{getv "/mariadb/user"}}
+    password: {{getv "/mariadb/passwd"}}
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      enabled: true
+  devtools:
+    restart:
+      enabled: true
+
+mybatis-plus:
+  auto-mapping-behavior: partial
+  map-underscore-to-camel-case: true
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  type-aliases-package: com.cmbc.infras.system.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 是否进行登录拦截 true 拦截 false 不拦截
+login.inception: true
+
+redis.addrs: {{getv "/redis/addrs"}}
+redis.passwd: {{getv "/redis/passwd"}}
+redis.cluster: {{getv "/redis/cluster"}}
+
+#feignClient-请求数据地址端口
+ke-rpc:
+  server: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}
+pe-rpc:
+  server: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}
+ke:
+  encrtyKey: wanguoshuju12345
+simple:
+  admin:
+    url: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}/api/admin
+    index:
+      url: {{getv "/nginx/protocol"}}://{{getv "/nginx/host"}}:{{getv "/nginx/port"}}
+
+#健康评分uri
+health:
+  document: /opt/data/upload/health/document
+  picture: /opt/data/upload/health/picture
+  pdf: /opt/data/upload/health/pdf
+  report: /opt/data/upload/health/report
+
+

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>中间层</title>
+</head>
+<body>
+<script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script th:inline="javascript">
+    var code = [[${code}]];
+    var target = [[${target}]];
+    window.onload = function () {
+        //const code = getQueryVariable("code");
+        //const target = getQueryVariable("target");
+        console.log("=========code==" + code + ",=====target:" + target);
+        const useUrl = location.origin + '/loginaccess/info/authorizeCallback?code=' + code + "&target=" + target;
+        ajax(useUrl)
+            .then((responseText) => {
+                const res = JSON.parse(responseText);
+                console.log(res)
+                if (res.state === 200) {
+                    localStorage.setItem('auth/userInfo', res.data);
+                    localStorage.setItem('auth/userInfo', JSON.stringify(res.data));
+                    setTimeout(function () {
+                        window.location.href = location.origin + res.data.redirectUrl;
+                    }, 0);
+                } else {
+                    var message = res.message;
+                    console.log(message);
+                    alert(message);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
+    function showMessage(message,type,time) {
+        let str = ''
+        switch (type) {
+            case 'success':
+                str = '<div class="success-message" style="width: 300px;height: 40px;text-align: center;background-color:#daf5eb;;color: rgba(59,128,58,0.7);position: fixed;left: 43%;top: 10%;line-height: 40px;border-radius: 5px;z-index: 9999">\n' +
+                    '<span class="mes-text">'+message+'</span></div>'
+                break;
+            case 'error':
+                str = '<div class="error-message" style="width: 300px;height: 40px;text-align: center;background-color: #f5f0e5;color: rgba(238,99,99,0.8);position: fixed;left: 43%;top: 10%;line-height: 40px;border-radius: 5px;;z-index: 9999">\n' +
+                    '<span class="mes-text">'+message+'</span></div>'
+                break;
+        }
+        $('body').append(str)
+        setTimeout(function () {
+            $('.'+type+'-message').remove()
+        }, time)
+    }
+
+    function ajax(url) {
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, false);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState !== 4) return;
+                if (xhr.status === 200 || xhr.status === 304) {
+                    resolve(xhr.responseText);
+                } else {
+                    reject(new Error(xhr.responseText));
+                }
+            };
+            xhr.send();
+        });
+    }
+
+</script>
+</body>
+</html>
+
